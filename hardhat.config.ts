@@ -84,7 +84,7 @@ const hardhatConfig = {
         count: 20,
       },
     },
-    linea_goerli: {
+    lineaGoerli: {
       url: 'https://rpc.goerli.linea.build',
       accounts: [WALLET_PRIVATE_KEY],
     },

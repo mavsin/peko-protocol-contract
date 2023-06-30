@@ -13,6 +13,7 @@ export enum eEthereumNetwork {
   coverage = 'coverage',
   hardhat = 'hardhat',
   tenderlyMain = 'tenderlyMain',
+  lineaGoerli = 'lineaGoerli'
 }
 
 export enum eContractid {
@@ -346,6 +347,7 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.main]: T;
   [eEthereumNetwork.hardhat]: T;
   [eEthereumNetwork.tenderlyMain]: T;
+  [eEthereumNetwork.lineaGoerli]: T;
 }
 
 export enum RateMode {

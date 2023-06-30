@@ -40,6 +40,7 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.coverage]: 'http://localhost:8555',
   [eEthereumNetwork.hardhat]: 'http://localhost:8545',
   [eEthereumNetwork.tenderlyMain]: `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
+  [eEthereumNetwork.lineaGoerli]: `https://linea-goerli.infura.io/v3/${INFURA_KEY}`
 };
 
 export const BLOCK_TO_FORK: iParamsPerNetwork<number | undefined> = {
@@ -49,4 +50,5 @@ export const BLOCK_TO_FORK: iParamsPerNetwork<number | undefined> = {
   [eEthereumNetwork.coverage]: undefined,
   [eEthereumNetwork.hardhat]: undefined,
   [eEthereumNetwork.tenderlyMain]: 12406069,
+  [eEthereumNetwork.lineaGoerli]: undefined
 };
