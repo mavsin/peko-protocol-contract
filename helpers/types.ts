@@ -13,6 +13,7 @@ export enum eEthereumNetwork {
   coverage = 'coverage',
   hardhat = 'hardhat',
   tenderlyMain = 'tenderlyMain',
+  lineaGoerli = 'lineaGoerli'
 }
 
 export enum eContractid {
