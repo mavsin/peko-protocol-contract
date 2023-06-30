@@ -353,6 +353,7 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.main]: T;
   [eEthereumNetwork.hardhat]: T;
   [eEthereumNetwork.tenderlyMain]: T;
+  [eEthereumNetwork.lineaGoerli]: T;
 }
 
 export enum RateMode {
