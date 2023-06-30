@@ -3,7 +3,9 @@ import { utils } from 'ethers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
+import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
 import {
+  getMockFlashLoanReceiver,
   getMockPool,
   getPoolConfiguratorProxy,
 } from '@aave/deploy-v3/dist/helpers/contract-getters';
@@ -19,8 +21,14 @@ import { makeSuite, TestEnv } from './helpers/make-suite';
 import { evmSnapshot, evmRevert } from '@aave/deploy-v3';
 
 makeSuite('PausablePool', (testEnv: TestEnv) => {
+  let _mockFlashLoanReceiver = {} as MockFlashLoanReceiver;
+
   const { RESERVE_PAUSED, INVALID_FROM_BALANCE_AFTER_TRANSFER, INVALID_TO_BALANCE_AFTER_TRANSFER } =
     ProtocolErrors;
+
+  before(async () => {
+    _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+  });
 
   it('User 0 deposits 1000 DAI. Configurator pauses pool. Transfers to user 1 reverts. Configurator unpauses the network and next transfer succeeds', async () => {
     const { users, pool, dai, aDai, configurator } = testEnv;
@@ -161,9 +169,24 @@ makeSuite('PausablePool', (testEnv: TestEnv) => {
 
     const flashAmount = utils.parseEther('0.8');
 
+    await _mockFlashLoanReceiver.setFailExecutionTransfer(true);
 
     // Pause pool
     await configurator.connect(users[1].signer).setPoolPause(true);
+
+    await expect(
+      pool
+        .connect(caller.signer)
+        .flashLoan(
+          _mockFlashLoanReceiver.address,
+          [weth.address],
+          [flashAmount],
+          [1],
+          caller.address,
+          '0x10',
+          '0'
+        )
+    ).to.be.revertedWith(RESERVE_PAUSED);
 
     // Unpause pool
     await configurator.connect(users[1].signer).setPoolPause(false);

@@ -37,6 +37,12 @@ contract PoolStorage {
   // Fee of the protocol bridge, expressed in bps
   uint256 internal _bridgeProtocolFee;
 
+  // Total FlashLoan Premium, expressed in bps
+  uint128 internal _flashLoanPremiumTotal;
+
+  // FlashLoan premium paid to protocol treasury, expressed in bps
+  uint128 internal _flashLoanPremiumToProtocol;
+
   // Available liquidity that can be borrowed at once at stable rate, expressed in bps
   uint64 internal _maxStableRateBorrowSizePercent;
 

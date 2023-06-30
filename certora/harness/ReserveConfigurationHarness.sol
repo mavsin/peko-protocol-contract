@@ -226,6 +226,18 @@ contract ReserveConfigurationHarness {
         return ReserveConfiguration.getEModeCategory(reservesConfig);
     }
 
+    // Sets the flashloanble flag for the reserve
+    function setFlashLoanEnabled(bool flashLoanEnabled) public {
+        DataTypes.ReserveConfigurationMap memory configNew = reservesConfig;
+        ReserveConfiguration.setFlashLoanEnabled(configNew, flashLoanEnabled);
+        reservesConfig.data = configNew.data;
+    }
+
+    // Gets the flashloanable flag for the reserve
+    function getFlashLoanEnabled() public view returns (bool) {
+        return ReserveConfiguration.getFlashLoanEnabled(reservesConfig);
+    }
+
     // returns the entire data in form of unit256
     function getData() public view returns (uint256) {
         return reservesConfig.data;

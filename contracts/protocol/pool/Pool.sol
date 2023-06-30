@@ -8,6 +8,7 @@ import {PoolLogic} from '../libraries/logic/PoolLogic.sol';
 import {ReserveLogic} from '../libraries/logic/ReserveLogic.sol';
 import {EModeLogic} from '../libraries/logic/EModeLogic.sol';
 import {SupplyLogic} from '../libraries/logic/SupplyLogic.sol';
+import {FlashLoanLogic} from '../libraries/logic/FlashLoanLogic.sol';
 import {BorrowLogic} from '../libraries/logic/BorrowLogic.sol';
 import {LiquidationLogic} from '../libraries/logic/LiquidationLogic.sol';
 import {DataTypes} from '../libraries/types/DataTypes.sol';
@@ -30,6 +31,7 @@ import {PoolStorage} from './PoolStorage.sol';
  *   # Swap their loans between variable and stable rate
  *   # Enable/disable their supplied assets as collateral rebalance stable rate borrow positions
  *   # Liquidate positions
+ *   # Execute Flash Loans
  * @dev To be covered by a proxy contract, owned by the PoolAddressesProvider of the specific market
  * @dev All admin functions are callable by the PoolConfigurator contract defined also in the
  *   PoolAddressesProvider
@@ -107,6 +109,8 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
   function initialize(IPoolAddressesProvider provider) external virtual initializer {
     require(provider == ADDRESSES_PROVIDER, Errors.INVALID_ADDRESSES_PROVIDER);
     _maxStableRateBorrowSizePercent = 0.25e4;
+    _flashLoanPremiumTotal = 0.0009e4;
+    _flashLoanPremiumToProtocol = 0;
   }
 
   /// @inheritdoc IPool
@@ -381,6 +385,64 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
   }
 
   /// @inheritdoc IPool
+  function flashLoan(
+    address receiverAddress,
+    address[] calldata assets,
+    uint256[] calldata amounts,
+    uint256[] calldata interestRateModes,
+    address onBehalfOf,
+    bytes calldata params,
+    uint16 referralCode
+  ) public virtual override {
+    DataTypes.FlashloanParams memory flashParams = DataTypes.FlashloanParams({
+      receiverAddress: receiverAddress,
+      assets: assets,
+      amounts: amounts,
+      interestRateModes: interestRateModes,
+      onBehalfOf: onBehalfOf,
+      params: params,
+      referralCode: referralCode,
+      flashLoanPremiumToProtocol: _flashLoanPremiumToProtocol,
+      flashLoanPremiumTotal: _flashLoanPremiumTotal,
+      maxStableRateBorrowSizePercent: _maxStableRateBorrowSizePercent,
+      reservesCount: _reservesCount,
+      addressesProvider: address(ADDRESSES_PROVIDER),
+      userEModeCategory: _usersEModeCategory[onBehalfOf],
+      isAuthorizedFlashBorrower: IACLManager(ADDRESSES_PROVIDER.getACLManager()).isFlashBorrower(
+        msg.sender
+      )
+    });
+
+    FlashLoanLogic.executeFlashLoan(
+      _reserves,
+      _reservesList,
+      _eModeCategories,
+      _usersConfig[onBehalfOf],
+      flashParams
+    );
+  }
+
+  /// @inheritdoc IPool
+  function flashLoanSimple(
+    address receiverAddress,
+    address asset,
+    uint256 amount,
+    bytes calldata params,
+    uint16 referralCode
+  ) public virtual override {
+    DataTypes.FlashloanSimpleParams memory flashParams = DataTypes.FlashloanSimpleParams({
+      receiverAddress: receiverAddress,
+      asset: asset,
+      amount: amount,
+      params: params,
+      referralCode: referralCode,
+      flashLoanPremiumToProtocol: _flashLoanPremiumToProtocol,
+      flashLoanPremiumTotal: _flashLoanPremiumTotal
+    });
+    FlashLoanLogic.executeFlashLoanSimple(_reserves[asset], flashParams);
+  }
+
+  /// @inheritdoc IPool
   function mintToTreasury(address[] calldata assets) external virtual override {
     PoolLogic.executeMintToTreasury(_reserves, assets);
   }
@@ -489,6 +551,16 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
   }
 
   /// @inheritdoc IPool
+  function FLASHLOAN_PREMIUM_TOTAL() public view virtual override returns (uint128) {
+    return _flashLoanPremiumTotal;
+  }
+
+  /// @inheritdoc IPool
+  function FLASHLOAN_PREMIUM_TO_PROTOCOL() public view virtual override returns (uint128) {
+    return _flashLoanPremiumToProtocol;
+  }
+
+  /// @inheritdoc IPool
   function MAX_NUMBER_RESERVES() public view virtual override returns (uint16) {
     return ReserveConfiguration.MAX_RESERVES_COUNT;
   }
@@ -579,6 +651,15 @@ contract Pool is VersionedInitializable, PoolStorage, IPool {
     uint256 protocolFee
   ) external virtual override onlyPoolConfigurator {
     _bridgeProtocolFee = protocolFee;
+  }
+
+  /// @inheritdoc IPool
+  function updateFlashloanPremiums(
+    uint128 flashLoanPremiumTotal,
+    uint128 flashLoanPremiumToProtocol
+  ) external virtual override onlyPoolConfigurator {
+    _flashLoanPremiumTotal = flashLoanPremiumTotal;
+    _flashLoanPremiumToProtocol = flashLoanPremiumToProtocol;
   }
 
   /// @inheritdoc IPool

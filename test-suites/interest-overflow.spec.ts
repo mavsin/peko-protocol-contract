@@ -16,6 +16,7 @@ import {
   AToken__factory,
   VariableDebtToken__factory,
   StableDebtToken__factory,
+  MockFlashLoanReceiver__factory,
 } from '../types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { evmSnapshot, evmRevert, increaseTime } from '@aave/deploy-v3';
@@ -371,6 +372,24 @@ makeSuite('Interest Rate and Index Overflow', (testEnv) => {
 
     await pool.connect(user.signer).deposit(dai.address, 1, user.address, 0);
     await dai.connect(user.signer).transfer(aDai.address, toBorrow);
+
+    const mockFlashLoan = await new MockFlashLoanReceiver__factory(await getFirstSigner()).deploy(
+      addressesProvider.address
+    );
+
+    await expect(
+      pool
+        .connect(user.signer)
+        .flashLoan(
+          mockFlashLoan.address,
+          [dai.address],
+          [toBorrow],
+          [RateMode.None],
+          user.address,
+          '0x00',
+          0
+        )
+    ).to.be.revertedWith(SAFECAST_UINT128_OVERFLOW);
   });
 
   it('StableDebtToken `mint` with nextStableRate > type(uint128).max (revert expected)', async () => {

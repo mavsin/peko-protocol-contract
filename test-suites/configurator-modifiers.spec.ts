@@ -77,6 +77,9 @@ makeSuite('PoolConfigurator: Modifiers', (testEnv: TestEnv) => {
       { fn: 'updateVariableDebtToken', args: [randomUpdateDebtToken] },
       { fn: 'setReserveActive', args: [randomAddress, true] },
       { fn: 'setReserveActive', args: [randomAddress, false] },
+      { fn: 'updateFlashloanPremiumTotal', args: [randomNumber] },
+      { fn: 'updateFlashloanPremiumToProtocol', args: [randomNumber] },
+      { fn: 'updateFlashloanPremiumToProtocol', args: [randomNumber] },
     ];
     for (const call of calls) {
       await expect(

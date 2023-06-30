@@ -223,3 +223,22 @@ rule getReserveNormalizedVariableDebtCheck()
 // 	withdraw@withrevert(e, asset, part1 + part2, to) at init;
 // 	assert !lastReverted;
 // }
+
+// The liquidity index should not give different result if we called mintToTreasury before a function (flashloan)
+// !!! Times out !!!
+// rule accruToTreasury()
+// {
+// 	env e;
+// 	calldataarg args;
+// 	calldataarg args2;
+// 	calldataarg args3;
+// 	storage init = lastStorage;
+// 	mintToTreasury(e, args);
+// 	flashLoan(e, args2);
+// 	//mintToTreasury(e, args);
+// 	uint256 withMintBefore = getReserveNormalizedIncome(e, args3);
+// 	flashLoan(e, args2) at init;
+// 	//mintToTreasury(e, args);
+// 	uint256 withoutMintBefore = getReserveNormalizedIncome(e, args3);
+// 	assert withoutMintBefore == withMintBefore;
+// }

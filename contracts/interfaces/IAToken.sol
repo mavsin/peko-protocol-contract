@@ -63,7 +63,7 @@ interface IAToken is IERC20, IScaledBalanceToken, IInitializableAToken {
 
   /**
    * @notice Transfers the underlying asset to `target`.
-   * @dev Used by the Pool to transfer assets in borrow() and withdraw()
+   * @dev Used by the Pool to transfer assets in borrow(), withdraw() and flashLoan()
    * @param target The recipient of the underlying
    * @param amount The amount getting transferred
    */

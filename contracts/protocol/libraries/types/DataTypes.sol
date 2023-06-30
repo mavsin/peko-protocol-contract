@@ -172,6 +172,42 @@ library DataTypes {
     uint8 fromEModeCategory;
   }
 
+  struct FlashloanParams {
+    address receiverAddress;
+    address[] assets;
+    uint256[] amounts;
+    uint256[] interestRateModes;
+    address onBehalfOf;
+    bytes params;
+    uint16 referralCode;
+    uint256 flashLoanPremiumToProtocol;
+    uint256 flashLoanPremiumTotal;
+    uint256 maxStableRateBorrowSizePercent;
+    uint256 reservesCount;
+    address addressesProvider;
+    uint8 userEModeCategory;
+    bool isAuthorizedFlashBorrower;
+  }
+
+  struct FlashloanSimpleParams {
+    address receiverAddress;
+    address asset;
+    uint256 amount;
+    bytes params;
+    uint16 referralCode;
+    uint256 flashLoanPremiumToProtocol;
+    uint256 flashLoanPremiumTotal;
+  }
+
+  struct FlashLoanRepaymentParams {
+    uint256 amount;
+    uint256 totalPremium;
+    uint256 flashLoanPremiumToProtocol;
+    address asset;
+    address receiverAddress;
+    uint16 referralCode;
+  }
+
   struct CalculateUserAccountDataParams {
     UserConfigurationMap userConfig;
     uint256 reservesCount;

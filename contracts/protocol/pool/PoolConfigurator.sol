@@ -183,6 +183,18 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
   }
 
   /// @inheritdoc IPoolConfigurator
+  function setReserveFlashLoaning(
+    address asset,
+    bool enabled
+  ) external override onlyRiskOrPoolAdmins {
+    DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
+
+    currentConfig.setFlashLoanEnabled(enabled);
+    _pool.setConfiguration(asset, currentConfig);
+    emit ReserveFlashLoaning(asset, enabled);
+  }
+
+  /// @inheritdoc IPoolConfigurator
   function setReserveActive(address asset, bool active) external override onlyPoolAdmin {
     if (!active) _checkNoSuppliers(asset);
     DataTypes.ReserveConfigurationMap memory currentConfig = _pool.getConfiguration(asset);
@@ -425,6 +437,35 @@ contract PoolConfigurator is VersionedInitializable, IPoolConfigurator {
     uint256 oldBridgeProtocolFee = _pool.BRIDGE_PROTOCOL_FEE();
     _pool.updateBridgeProtocolFee(newBridgeProtocolFee);
     emit BridgeProtocolFeeUpdated(oldBridgeProtocolFee, newBridgeProtocolFee);
+  }
+
+  /// @inheritdoc IPoolConfigurator
+  function updateFlashloanPremiumTotal(
+    uint128 newFlashloanPremiumTotal
+  ) external override onlyPoolAdmin {
+    require(
+      newFlashloanPremiumTotal <= PercentageMath.PERCENTAGE_FACTOR,
+      Errors.FLASHLOAN_PREMIUM_INVALID
+    );
+    uint128 oldFlashloanPremiumTotal = _pool.FLASHLOAN_PREMIUM_TOTAL();
+    _pool.updateFlashloanPremiums(newFlashloanPremiumTotal, _pool.FLASHLOAN_PREMIUM_TO_PROTOCOL());
+    emit FlashloanPremiumTotalUpdated(oldFlashloanPremiumTotal, newFlashloanPremiumTotal);
+  }
+
+  /// @inheritdoc IPoolConfigurator
+  function updateFlashloanPremiumToProtocol(
+    uint128 newFlashloanPremiumToProtocol
+  ) external override onlyPoolAdmin {
+    require(
+      newFlashloanPremiumToProtocol <= PercentageMath.PERCENTAGE_FACTOR,
+      Errors.FLASHLOAN_PREMIUM_INVALID
+    );
+    uint128 oldFlashloanPremiumToProtocol = _pool.FLASHLOAN_PREMIUM_TO_PROTOCOL();
+    _pool.updateFlashloanPremiums(_pool.FLASHLOAN_PREMIUM_TOTAL(), newFlashloanPremiumToProtocol);
+    emit FlashloanPremiumToProtocolUpdated(
+      oldFlashloanPremiumToProtocol,
+      newFlashloanPremiumToProtocol
+    );
   }
 
   function _checkNoSuppliers(address asset) internal view {

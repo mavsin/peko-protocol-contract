@@ -33,6 +33,13 @@ interface IPoolConfigurator {
   event ReserveBorrowing(address indexed asset, bool enabled);
 
   /**
+   * @dev Emitted when flashloans are enabled or disabled on a reserve.
+   * @param asset The address of the underlying asset of the reserve
+   * @param enabled True if flashloans are enabled, false otherwise
+   */
+  event ReserveFlashLoaning(address indexed asset, bool enabled);
+
+  /**
    * @dev Emitted when the collateralization risk parameters for the specified asset are updated.
    * @param asset The address of the underlying asset of the reserve
    * @param ltv The loan to value of the asset when used as collateral
@@ -226,6 +233,26 @@ interface IPoolConfigurator {
   event BridgeProtocolFeeUpdated(uint256 oldBridgeProtocolFee, uint256 newBridgeProtocolFee);
 
   /**
+   * @dev Emitted when the total premium on flashloans is updated.
+   * @param oldFlashloanPremiumTotal The old premium, expressed in bps
+   * @param newFlashloanPremiumTotal The new premium, expressed in bps
+   */
+  event FlashloanPremiumTotalUpdated(
+    uint128 oldFlashloanPremiumTotal,
+    uint128 newFlashloanPremiumTotal
+  );
+
+  /**
+   * @dev Emitted when the part of the premium that goes to protocol is updated.
+   * @param oldFlashloanPremiumToProtocol The old premium, expressed in bps
+   * @param newFlashloanPremiumToProtocol The new premium, expressed in bps
+   */
+  event FlashloanPremiumToProtocolUpdated(
+    uint128 oldFlashloanPremiumToProtocol,
+    uint128 newFlashloanPremiumToProtocol
+  );
+
+  /**
    * @dev Emitted when the reserve is set as borrowable/non borrowable in isolation mode.
    * @param asset The address of the underlying asset of the reserve
    * @param borrowable True if the reserve is borrowable in isolation, false otherwise
@@ -291,6 +318,13 @@ interface IPoolConfigurator {
    * @param enabled True if stable rate borrowing needs to be enabled, false otherwise
    */
   function setReserveStableRateBorrowing(address asset, bool enabled) external;
+
+  /**
+   * @notice Enable or disable flashloans on a reserve
+   * @param asset The address of the underlying asset of the reserve
+   * @param enabled True if flashloans need to be enabled, false otherwise
+   */
+  function setReserveFlashLoaning(address asset, bool enabled) external;
 
   /**
    * @notice Activate or deactivate a reserve
@@ -418,6 +452,25 @@ interface IPoolConfigurator {
    * @param newBridgeProtocolFee The part of the fee sent to the protocol treasury, expressed in bps
    */
   function updateBridgeProtocolFee(uint256 newBridgeProtocolFee) external;
+
+  /**
+   * @notice Updates the total flash loan premium.
+   * Total flash loan premium consists of two parts:
+   * - A part is sent to aToken holders as extra balance
+   * - A part is collected by the protocol reserves
+   * @dev Expressed in bps
+   * @dev The premium is calculated on the total amount borrowed
+   * @param newFlashloanPremiumTotal The total flashloan premium
+   */
+  function updateFlashloanPremiumTotal(uint128 newFlashloanPremiumTotal) external;
+
+  /**
+   * @notice Updates the flash loan premium collected by protocol reserves
+   * @dev Expressed in bps
+   * @dev The premium to protocol is calculated on the total flashloan premium
+   * @param newFlashloanPremiumToProtocol The part of the flashloan premium sent to the protocol treasury
+   */
+  function updateFlashloanPremiumToProtocol(uint128 newFlashloanPremiumToProtocol) external;
 
   /**
    * @notice Sets the debt ceiling for an asset.

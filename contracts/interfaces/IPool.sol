@@ -61,9 +61,10 @@ interface IPool {
   event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount);
 
   /**
-   * @dev Emitted on borrow() when debt needs to be opened
+   * @dev Emitted on borrow() and flashLoan() when debt needs to be opened
    * @param reserve The address of the underlying asset being borrowed
-   * @param user The address of the user initiating the borrow(), receiving the funds on borrow()
+   * @param user The address of the user initiating the borrow(), receiving the funds on borrow() or just
+   * initiator of the transaction on flashLoan()
    * @param onBehalfOf The address that will be getting the debt
    * @param amount The amount borrowed out
    * @param interestRateMode The rate mode: 1 for Stable, 2 for Variable
@@ -142,6 +143,26 @@ interface IPool {
    * @param user The address of the user for which the rebalance has been executed
    */
   event RebalanceStableBorrowRate(address indexed reserve, address indexed user);
+
+  /**
+   * @dev Emitted on flashLoan()
+   * @param target The address of the flash loan receiver contract
+   * @param initiator The address initiating the flash loan
+   * @param asset The address of the asset being flash borrowed
+   * @param amount The amount flash borrowed
+   * @param interestRateMode The flashloan mode: 0 for regular flashloan, 1 for Stable debt, 2 for Variable debt
+   * @param premium The fee flash borrowed
+   * @param referralCode The referral code used
+   */
+  event FlashLoan(
+    address indexed target,
+    address initiator,
+    address indexed asset,
+    uint256 amount,
+    DataTypes.InterestRateMode interestRateMode,
+    uint256 premium,
+    uint16 indexed referralCode
+  );
 
   /**
    * @dev Emitted when a borrower is liquidated.
@@ -397,6 +418,53 @@ interface IPool {
   ) external;
 
   /**
+   * @notice Allows smartcontracts to access the liquidity of the pool within one transaction,
+   * as long as the amount taken plus a fee is returned.
+   * @dev IMPORTANT There are security concerns for developers of flashloan receiver contracts that must be kept
+   * into consideration. For further details please visit https://docs.aave.com/developers/
+   * @param receiverAddress The address of the contract receiving the funds, implementing IFlashLoanReceiver interface
+   * @param assets The addresses of the assets being flash-borrowed
+   * @param amounts The amounts of the assets being flash-borrowed
+   * @param interestRateModes Types of the debt to open if the flash loan is not returned:
+   *   0 -> Don't open any debt, just revert if funds can't be transferred from the receiver
+   *   1 -> Open debt at stable rate for the value of the amount flash-borrowed to the `onBehalfOf` address
+   *   2 -> Open debt at variable rate for the value of the amount flash-borrowed to the `onBehalfOf` address
+   * @param onBehalfOf The address  that will receive the debt in the case of using on `modes` 1 or 2
+   * @param params Variadic packed params to pass to the receiver as extra information
+   * @param referralCode The code used to register the integrator originating the operation, for potential rewards.
+   *   0 if the action is executed directly by the user, without any middle-man
+   */
+  function flashLoan(
+    address receiverAddress,
+    address[] calldata assets,
+    uint256[] calldata amounts,
+    uint256[] calldata interestRateModes,
+    address onBehalfOf,
+    bytes calldata params,
+    uint16 referralCode
+  ) external;
+
+  /**
+   * @notice Allows smartcontracts to access the liquidity of the pool within one transaction,
+   * as long as the amount taken plus a fee is returned.
+   * @dev IMPORTANT There are security concerns for developers of flashloan receiver contracts that must be kept
+   * into consideration. For further details please visit https://docs.aave.com/developers/
+   * @param receiverAddress The address of the contract receiving the funds, implementing IFlashLoanSimpleReceiver interface
+   * @param asset The address of the asset being flash-borrowed
+   * @param amount The amount of the asset being flash-borrowed
+   * @param params Variadic packed params to pass to the receiver as extra information
+   * @param referralCode The code used to register the integrator originating the operation, for potential rewards.
+   *   0 if the action is executed directly by the user, without any middle-man
+   */
+  function flashLoanSimple(
+    address receiverAddress,
+    address asset,
+    uint256 amount,
+    bytes calldata params,
+    uint16 referralCode
+  ) external;
+
+  /**
    * @notice Returns the user account data across all the reserves
    * @param user The address of the user
    * @return totalCollateralBase The total collateral of the user in the base currency used by the price feed
@@ -559,6 +627,21 @@ interface IPool {
   function updateBridgeProtocolFee(uint256 bridgeProtocolFee) external;
 
   /**
+   * @notice Updates flash loan premiums. Flash loan premium consists of two parts:
+   * - A part is sent to aToken holders as extra, one time accumulated interest
+   * - A part is collected by the protocol treasury
+   * @dev The total premium is calculated on the total borrowed amount
+   * @dev The premium to protocol is calculated on the total premium, being a percentage of `flashLoanPremiumTotal`
+   * @dev Only callable by the PoolConfigurator contract
+   * @param flashLoanPremiumTotal The total premium, expressed in bps
+   * @param flashLoanPremiumToProtocol The part of the premium sent to the protocol treasury, expressed in bps
+   */
+  function updateFlashloanPremiums(
+    uint128 flashLoanPremiumTotal,
+    uint128 flashLoanPremiumToProtocol
+  ) external;
+
+  /**
    * @notice Configures a new category for the eMode.
    * @dev In eMode, the protocol allows very high borrowing power to borrow assets of the same category.
    * The category 0 is reserved as it's the default for volatile assets
@@ -601,10 +684,22 @@ interface IPool {
   function MAX_STABLE_RATE_BORROW_SIZE_PERCENT() external view returns (uint256);
 
   /**
+   * @notice Returns the total fee on flash loans
+   * @return The total fee on flashloans
+   */
+  function FLASHLOAN_PREMIUM_TOTAL() external view returns (uint128);
+
+  /**
    * @notice Returns the part of the bridge fees sent to protocol
    * @return The bridge fee sent to the protocol treasury
    */
   function BRIDGE_PROTOCOL_FEE() external view returns (uint256);
+
+  /**
+   * @notice Returns the part of the flashloan fees sent to protocol
+   * @return The flashloan fee sent to the protocol treasury
+   */
+  function FLASHLOAN_PREMIUM_TO_PROTOCOL() external view returns (uint128);
 
   /**
    * @notice Returns the maximum number of reserves supported to be listed in this Pool

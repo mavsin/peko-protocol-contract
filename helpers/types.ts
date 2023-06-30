@@ -13,7 +13,6 @@ export enum eEthereumNetwork {
   coverage = 'coverage',
   hardhat = 'hardhat',
   tenderlyMain = 'tenderlyMain',
-  lineaGoerli = 'lineaGoerli'
 }
 
 export enum eContractid {
@@ -30,6 +29,7 @@ export enum eContractid {
   GenericLogic = 'GenericLogic',
   SupplyLogic = 'SupplyLogic',
   BorrowLogic = 'BorrowLogic',
+  FlashLoanLogic = 'FlashLoanLogic',
   LiquidationLogic = 'LiquidationLogic',
   BridgeLogic = 'BridgeLogic',
   EModeLogic = 'EModeLogic',
@@ -41,6 +41,7 @@ export enum eContractid {
   AaveOracle = 'AaveOracle',
   DefaultReserveInterestRateStrategy = 'DefaultReserveInterestRateStrategy',
   InitializableImmutableAdminUpgradeabilityProxy = 'InitializableImmutableAdminUpgradeabilityProxy',
+  MockFlashLoanReceiver = 'MockFlashLoanReceiver',
   AToken = 'AToken',
   MockAToken = 'MockAToken',
   DelegationAwareAToken = 'DelegationAwareAToken',
@@ -82,11 +83,13 @@ export enum ProtocolErrors {
   CALLER_NOT_POOL_CONFIGURATOR = '10', // 'The caller of the function is not the pool configurator'
   CALLER_NOT_ATOKEN = '11', // 'The caller of the function is not an AToken'
   INVALID_ADDRESSES_PROVIDER = '12', // 'The address of the pool addresses provider is invalid'
+  INVALID_FLASHLOAN_EXECUTOR_RETURN = '13', // 'Invalid return value of the flashloan executor function'
   RESERVE_ALREADY_ADDED = '14', // 'Reserve has already been added to reserve list'
   NO_MORE_RESERVES_ALLOWED = '15', // 'Maximum amount of reserves in the pool reached'
   EMODE_CATEGORY_RESERVED = '16', // 'Zero eMode category is reserved for volatile heterogeneous assets'
   INVALID_EMODE_CATEGORY_ASSIGNMENT = '17', // 'Invalid eMode category assignment to asset'
   RESERVE_LIQUIDITY_NOT_ZERO = '18', // 'The liquidity of the reserve needs to be 0'
+  FLASHLOAN_PREMIUM_INVALID = '19', // 'Invalid flashloan premium'
   INVALID_RESERVE_PARAMS = '20', // 'Invalid risk parameters for the reserve'
   INVALID_EMODE_CATEGORY_PARAMS = '21', // 'Invalid risk parameters for the eMode category'
   BRIDGE_PROTOCOL_FEE_INVALID = '22', // 'Invalid bridge protocol fee'
@@ -115,6 +118,7 @@ export enum ProtocolErrors {
   HEALTH_FACTOR_NOT_BELOW_THRESHOLD = '45', // 'Health factor is not below the threshold'
   COLLATERAL_CANNOT_BE_LIQUIDATED = '46', // 'The collateral chosen cannot be liquidated'
   SPECIFIED_CURRENCY_NOT_BORROWED_BY_USER = '47', // 'User did not borrow the specified currency'
+  INCONSISTENT_FLASHLOAN_PARAMS = '49', // 'Inconsistent flashloan parameters'
   BORROW_CAP_EXCEEDED = '50', // 'Borrow cap is exceeded'
   SUPPLY_CAP_EXCEEDED = '51', // 'Supply cap is exceeded'
   UNBACKED_MINT_CAP_EXCEEDED = '52', // 'Unbacked mint cap is exceeded'
@@ -156,6 +160,7 @@ export enum ProtocolErrors {
   STABLE_BORROWING_ENABLED = '88', // 'Stable borrowing is enabled'
   SILOED_BORROWING_VIOLATION = '89', // user is trying to violate the siloed borrowing rule
   RESERVE_DEBT_NOT_ZERO = '90', // the total debt of the reserve needs to be 0
+  FLASHLOAN_DISABLED = '91', // FlashLoaning for this asset is disabled
   // SafeCast
   SAFECAST_UINT128_OVERFLOW = "SafeCast: value doesn't fit in 128 bits",
 
@@ -347,7 +352,6 @@ export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.main]: T;
   [eEthereumNetwork.hardhat]: T;
   [eEthereumNetwork.tenderlyMain]: T;
-  [eEthereumNetwork.lineaGoerli]: T;
 }
 
 export enum RateMode {

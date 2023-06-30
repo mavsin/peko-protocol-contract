@@ -19,6 +19,7 @@ makeSuite('PoolConfigurator: Edge cases', (testEnv: TestEnv) => {
     INVALID_RESERVE_FACTOR,
     INVALID_RESERVE_PARAMS,
     INVALID_LIQ_BONUS,
+    FLASHLOAN_PREMIUM_INVALID,
     RESERVE_LIQUIDITY_NOT_ZERO,
     INVALID_BORROW_CAP,
     INVALID_SUPPLY_CAP,
@@ -108,6 +109,24 @@ makeSuite('PoolConfigurator: Edge cases', (testEnv: TestEnv) => {
     await expect(configurator.updateBridgeProtocolFee(newProtocolFee)).to.be.revertedWith(
       BRIDGE_PROTOCOL_FEE_INVALID
     );
+  });
+
+  it('Tries to update flashloan premium total > PERCENTAGE_FACTOR (revert expected)', async () => {
+    const { configurator } = testEnv;
+
+    const newPremiumTotal = 10001;
+    await expect(configurator.updateFlashloanPremiumTotal(newPremiumTotal)).to.be.revertedWith(
+      FLASHLOAN_PREMIUM_INVALID
+    );
+  });
+
+  it('Tries to update flashloan premium to protocol > PERCENTAGE_FACTOR (revert expected)', async () => {
+    const { configurator } = testEnv;
+
+    const newPremiumToProtocol = 10001;
+    await expect(
+      configurator.updateFlashloanPremiumToProtocol(newPremiumToProtocol)
+    ).to.be.revertedWith(FLASHLOAN_PREMIUM_INVALID);
   });
 
   it('Tries to update borrowCap > MAX_BORROW_CAP (revert expected)', async () => {

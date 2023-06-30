@@ -799,6 +799,50 @@ makeSuite('PoolConfigurator', (testEnv: TestEnv) => {
     expect(await pool.BRIDGE_PROTOCOL_FEE()).to.be.eq(newProtocolFee);
   });
 
+  it('Updates flash loan premiums equal to PERCENTAGE_FACTOR: 10000 toProtocol, 10000 total', async () => {
+    const snapId = await evmSnapshot();
+
+    const { pool, configurator } = testEnv;
+
+    const oldFlashloanPremiumTotal = await pool.FLASHLOAN_PREMIUM_TOTAL();
+    const oldFlashloanPremiumToProtocol = await pool.FLASHLOAN_PREMIUM_TO_PROTOCOL();
+
+    const newPremiumTotal = 10000;
+    const newPremiumToProtocol = 10000;
+
+    expect(await configurator.updateFlashloanPremiumTotal(newPremiumTotal))
+      .to.emit(configurator, 'FlashloanPremiumTotalUpdated')
+      .withArgs(oldFlashloanPremiumTotal, newPremiumTotal);
+    expect(await configurator.updateFlashloanPremiumToProtocol(newPremiumToProtocol))
+      .to.emit(configurator, 'FlashloanPremiumToProtocolUpdated')
+      .withArgs(oldFlashloanPremiumToProtocol, newPremiumToProtocol);
+
+    expect(await pool.FLASHLOAN_PREMIUM_TOTAL()).to.be.eq(newPremiumTotal);
+    expect(await pool.FLASHLOAN_PREMIUM_TO_PROTOCOL()).to.be.eq(newPremiumToProtocol);
+
+    await evmRevert(snapId);
+  });
+
+  it('Updates flash loan premiums: 10 toProtocol, 40 total', async () => {
+    const { pool, configurator } = testEnv;
+
+    const oldFlashloanPremiumTotal = await pool.FLASHLOAN_PREMIUM_TOTAL();
+    const oldFlashloanPremiumToProtocol = await pool.FLASHLOAN_PREMIUM_TO_PROTOCOL();
+
+    const newPremiumTotal = 40;
+    const newPremiumToProtocol = 10;
+
+    expect(await configurator.updateFlashloanPremiumTotal(newPremiumTotal))
+      .to.emit(configurator, 'FlashloanPremiumTotalUpdated')
+      .withArgs(oldFlashloanPremiumTotal, newPremiumTotal);
+    expect(await configurator.updateFlashloanPremiumToProtocol(newPremiumToProtocol))
+      .to.emit(configurator, 'FlashloanPremiumToProtocolUpdated')
+      .withArgs(oldFlashloanPremiumToProtocol, newPremiumToProtocol);
+
+    expect(await pool.FLASHLOAN_PREMIUM_TOTAL()).to.be.eq(newPremiumTotal);
+    expect(await pool.FLASHLOAN_PREMIUM_TO_PROTOCOL()).to.be.eq(newPremiumToProtocol);
+  });
+
   it('Adds a new eMode category for stablecoins', async () => {
     const { configurator, pool, poolAdmin } = testEnv;
 
@@ -1028,5 +1072,30 @@ makeSuite('PoolConfigurator', (testEnv: TestEnv) => {
   it('Read debt ceiling decimals', async () => {
     const { helpersContract } = testEnv;
     expect(await helpersContract.getDebtCeilingDecimals()).to.be.eq(2);
+  });
+
+  it('Check that the reserves have flashloans enabled', async () => {
+    const { weth, aave, usdc, dai, helpersContract } = testEnv;
+
+    const wethFlashLoanEnabled = await helpersContract.getFlashLoanEnabled(weth.address);
+    expect(wethFlashLoanEnabled).to.be.equal(true);
+
+    const aaveFlashLoanEnabled = await helpersContract.getFlashLoanEnabled(aave.address);
+    expect(aaveFlashLoanEnabled).to.be.equal(true);
+
+    const usdcFlashLoanEnabled = await helpersContract.getFlashLoanEnabled(usdc.address);
+    expect(usdcFlashLoanEnabled).to.be.equal(true);
+
+    const daiFlashLoanEnabled = await helpersContract.getFlashLoanEnabled(dai.address);
+    expect(daiFlashLoanEnabled).to.be.equal(true);
+  });
+
+  it('Disable weth flashloans', async () => {
+    const { weth, configurator, helpersContract } = testEnv;
+
+    expect(await configurator.setReserveFlashLoaning(weth.address, false));
+
+    const wethFlashLoanEnabled = await helpersContract.getFlashLoanEnabled(weth.address);
+    expect(wethFlashLoanEnabled).to.be.equal(false);
   });
 });

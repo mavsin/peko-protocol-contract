@@ -35,6 +35,8 @@ methods {
     getUnbackedMintCap() returns (uint256) envfree
     setEModeCategory(uint256) envfree
     getEModeCategory() returns (uint256) envfree
+    setFlashLoanEnabled(bool) envfree
+    getFlashLoanEnabled() returns (bool) envfree
     getFlags() returns (bool, bool, bool, bool, bool) envfree
     getParams() returns (uint256, uint256, uint256, uint256, uint256, uint256) envfree
     getCaps() returns (uint256, uint256) envfree

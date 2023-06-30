@@ -451,6 +451,34 @@ library ValidationLogic {
     require(!isPaused, Errors.RESERVE_PAUSED);
   }
 
+  /**
+   * @notice Validates a flashloan action.
+   * @param reservesData The state of all the reserves
+   * @param assets The assets being flash-borrowed
+   * @param amounts The amounts for each asset being borrowed
+   */
+  function validateFlashloan(
+    mapping(address => DataTypes.ReserveData) storage reservesData,
+    address[] memory assets,
+    uint256[] memory amounts
+  ) internal view {
+    require(assets.length == amounts.length, Errors.INCONSISTENT_FLASHLOAN_PARAMS);
+    for (uint256 i = 0; i < assets.length; i++) {
+      validateFlashloanSimple(reservesData[assets[i]]);
+    }
+  }
+
+  /**
+   * @notice Validates a flashloan action.
+   * @param reserve The state of the reserve
+   */
+  function validateFlashloanSimple(DataTypes.ReserveData storage reserve) internal view {
+    DataTypes.ReserveConfigurationMap memory configuration = reserve.configuration;
+    require(!configuration.getPaused(), Errors.RESERVE_PAUSED);
+    require(configuration.getActive(), Errors.RESERVE_INACTIVE);
+    require(configuration.getFlashLoanEnabled(), Errors.FLASHLOAN_DISABLED);
+  }
+
   struct ValidateLiquidationCallLocalVars {
     bool collateralReserveActive;
     bool collateralReservePaused;

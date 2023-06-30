@@ -2,9 +2,13 @@ import { expect } from 'chai';
 import { utils } from 'ethers';
 import { ProtocolErrors } from '../helpers/types';
 import { MAX_UINT_AMOUNT, ZERO_ADDRESS } from '../helpers/constants';
+import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
+import { getMockFlashLoanReceiver } from '@aave/deploy-v3/dist/helpers/contract-getters';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 
 makeSuite('Pool: Drop Reserve', (testEnv: TestEnv) => {
+  let _mockFlashLoanReceiver = {} as MockFlashLoanReceiver;
+
   const {
     UNDERLYING_CLAIMABLE_RIGHTS_NOT_ZERO,
     STABLE_DEBT_NOT_ZERO,
@@ -12,6 +16,10 @@ makeSuite('Pool: Drop Reserve', (testEnv: TestEnv) => {
     ASSET_NOT_LISTED,
     ZERO_ADDRESS_NOT_VALID,
   } = ProtocolErrors;
+
+  before(async () => {
+    _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
+  });
 
   it('User 1 deposits DAI, User 2 borrow DAI stable and variable, should fail to drop DAI reserve', async () => {
     const {
