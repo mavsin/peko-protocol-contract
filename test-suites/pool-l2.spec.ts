@@ -1,26 +1,21 @@
 import { expect } from 'chai';
-import { BigNumber, Signer, utils } from 'ethers';
-import { impersonateAccountsHardhat } from '../helpers/misc-utils';
+import { BigNumber, utils } from 'ethers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { getFirstSigner } from '@aave/deploy-v3/dist/helpers/utilities/signer';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import {
-  evmSnapshot,
-  evmRevert,
   DefaultReserveInterestRateStrategy__factory,
   VariableDebtToken__factory,
   increaseTime,
-  AaveDistributionManager,
 } from '@aave/deploy-v3';
 import {
-  InitializableImmutableAdminUpgradeabilityProxy,
   MockL2Pool__factory,
   MockL2Pool,
   L2Encoder,
   L2Encoder__factory,
 } from '../types';
-import { ethers, getChainId } from 'hardhat';
+import { getChainId } from 'hardhat';
 import {
   buildPermitParams,
   getProxyImplementation,
@@ -37,16 +32,6 @@ declare var hre: HardhatRuntimeEnvironment;
 makeSuite('Pool: L2 functions', (testEnv: TestEnv) => {
   const {
     INVALID_HF,
-    NO_MORE_RESERVES_ALLOWED,
-    CALLER_NOT_ATOKEN,
-    NOT_CONTRACT,
-    CALLER_NOT_POOL_CONFIGURATOR,
-    RESERVE_ALREADY_INITIALIZED,
-    INVALID_ADDRESSES_PROVIDER,
-    RESERVE_ALREADY_ADDED,
-    DEBT_CEILING_NOT_ZERO,
-    ASSET_NOT_LISTED,
-    ZERO_ADDRESS_NOT_VALID,
   } = ProtocolErrors;
 
   let l2Pool: MockL2Pool;
@@ -72,7 +57,6 @@ makeSuite('Pool: L2 functions', (testEnv: TestEnv) => {
         LiquidationLogic: (await hre.deployments.get('LiquidationLogic')).address,
         EModeLogic: (await hre.deployments.get('EModeLogic')).address,
         BridgeLogic: (await hre.deployments.get('BridgeLogic')).address,
-        FlashLoanLogic: (await hre.deployments.get('FlashLoanLogic')).address,
         PoolLogic: (await hre.deployments.get('PoolLogic')).address,
       },
       log: false,

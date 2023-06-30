@@ -232,13 +232,6 @@ describe('ReserveConfiguration', async () => {
     expect(await configMock.getUnbackedMintCap()).to.be.eq(ZERO);
   });
 
-  it('getFlashLoanEnabled()', async () => {
-    expect(await configMock.getFlashLoanEnabled()).to.be.eq(false);
-    expect(await configMock.setFlashLoanEnabled(true));
-    expect(await configMock.getFlashLoanEnabled()).to.be.eq(true);
-    expect(await configMock.setFlashLoanEnabled(false));
-  });
-
   it('setLtv() with ltv = MAX_VALID_LTV', async () => {
     expect(bigNumbersToArrayString(await configMock.getParams())).to.be.eql(
       bigNumbersToArrayString([ZERO, ZERO, ZERO, ZERO, ZERO, ZERO])

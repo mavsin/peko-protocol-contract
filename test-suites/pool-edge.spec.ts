@@ -12,8 +12,6 @@ import {
   evmSnapshot,
   evmRevert,
   getPoolLibraries,
-  MockFlashLoanReceiver,
-  getMockFlashLoanReceiver,
   advanceTimeAndBlock,
   getACLManager,
 } from '@aave/deploy-v3';
@@ -28,7 +26,7 @@ import {
 } from '../types';
 import { convertToCurrencyDecimals, getProxyImplementation } from '../helpers/contracts-helpers';
 import { ethers } from 'hardhat';
-import { deposit, getTxCostAndTimestamp } from './helpers/actions';
+import { getTxCostAndTimestamp } from './helpers/actions';
 import AaveConfig from '@aave/deploy-v3/dist/markets/test';
 import {
   calcExpectedReserveDataAfterDeposit,
@@ -118,8 +116,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
 
   let snap: string;
 
-  let _mockFlashLoanReceiver = {} as MockFlashLoanReceiver;
-
   beforeEach(async () => {
     snap = await evmSnapshot();
   });
@@ -148,7 +144,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
         LiquidationLogic: (await hre.deployments.get('LiquidationLogic')).address,
         EModeLogic: (await hre.deployments.get('EModeLogic')).address,
         BridgeLogic: (await hre.deployments.get('BridgeLogic')).address,
-        FlashLoanLogic: (await hre.deployments.get('FlashLoanLogic')).address,
         PoolLogic: (await hre.deployments.get('PoolLogic')).address,
       },
       log: false,
@@ -217,7 +212,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
         LiquidationLogic: (await hre.deployments.get('LiquidationLogic')).address,
         EModeLogic: (await hre.deployments.get('EModeLogic')).address,
         BridgeLogic: (await hre.deployments.get('BridgeLogic')).address,
-        FlashLoanLogic: (await hre.deployments.get('FlashLoanLogic')).address,
         PoolLogic: (await hre.deployments.get('PoolLogic')).address,
       },
       log: false,
@@ -501,7 +495,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
         LiquidationLogic: (await hre.deployments.get('LiquidationLogic')).address,
         EModeLogic: (await hre.deployments.get('EModeLogic')).address,
         BridgeLogic: (await hre.deployments.get('BridgeLogic')).address,
-        FlashLoanLogic: (await hre.deployments.get('FlashLoanLogic')).address,
         PoolLogic: (await hre.deployments.get('PoolLogic')).address,
       },
       log: false,
@@ -669,7 +662,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
         LiquidationLogic: (await hre.deployments.get('LiquidationLogic')).address,
         EModeLogic: (await hre.deployments.get('EModeLogic')).address,
         BridgeLogic: (await hre.deployments.get('BridgeLogic')).address,
-        FlashLoanLogic: (await hre.deployments.get('FlashLoanLogic')).address,
         PoolLogic: (await hre.deployments.get('PoolLogic')).address,
       },
       log: false,
@@ -880,11 +872,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       users: [user0],
     } = testEnv;
 
-    _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
-
-    await configurator.updateFlashloanPremiumTotal(TOTAL_PREMIUM);
-    await configurator.updateFlashloanPremiumToProtocol(PREMIUM_TO_PROTOCOL);
-
     const userAddress = user0.address;
     const amountToDeposit = ethers.utils.parseEther('1');
 
@@ -895,16 +882,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     await pool.deposit(weth.address, amountToDeposit, userAddress, '0');
 
     const wethFlashBorrowedAmount = ethers.utils.parseEther('0.8');
-
-    await pool.flashLoan(
-      _mockFlashLoanReceiver.address,
-      [weth.address],
-      [wethFlashBorrowedAmount],
-      [0],
-      _mockFlashLoanReceiver.address,
-      '0x10',
-      '0'
-    );
 
     await pool.connect(user0.signer).withdraw(weth.address, MAX_UINT_AMOUNT, userAddress);
 
@@ -934,11 +911,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       users: [user0],
     } = testEnv;
 
-    _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
-
-    await configurator.updateFlashloanPremiumTotal(TOTAL_PREMIUM);
-    await configurator.updateFlashloanPremiumToProtocol(PREMIUM_TO_PROTOCOL);
-
     const userAddress = user0.address;
     const amountToDeposit = ethers.utils.parseEther('100000');
 
@@ -949,16 +921,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     await pool.deposit(weth.address, amountToDeposit, userAddress, '0');
 
     const wethFlashBorrowedAmount = ethers.utils.parseEther('100000');
-
-    await pool.flashLoan(
-      _mockFlashLoanReceiver.address,
-      [weth.address],
-      [wethFlashBorrowedAmount],
-      [0],
-      _mockFlashLoanReceiver.address,
-      '0x10',
-      '0'
-    );
 
     // At this point the totalSupply + accruedToTreasury is ~100090 WETH, with 100063 from supply and ~27 from accruedToTreasury
     // so to properly test the supply cap condition:
@@ -984,11 +946,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
       users: [user0],
     } = testEnv;
 
-    _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
-
-    await configurator.updateFlashloanPremiumTotal(TOTAL_PREMIUM);
-    await configurator.updateFlashloanPremiumToProtocol(PREMIUM_TO_PROTOCOL);
-
     const userAddress = user0.address;
     const amountToDeposit = ethers.utils.parseEther('100000');
 
@@ -999,16 +956,6 @@ makeSuite('Pool: Edge cases', (testEnv: TestEnv) => {
     await pool.deposit(weth.address, amountToDeposit, userAddress, '0');
 
     const wethFlashBorrowedAmount = ethers.utils.parseEther('100000');
-
-    await pool.flashLoan(
-      _mockFlashLoanReceiver.address,
-      [weth.address],
-      [wethFlashBorrowedAmount],
-      [0],
-      _mockFlashLoanReceiver.address,
-      '0x10',
-      '0'
-    );
 
     await pool.connect(user0.signer).withdraw(weth.address, MAX_UINT_AMOUNT, userAddress);
 

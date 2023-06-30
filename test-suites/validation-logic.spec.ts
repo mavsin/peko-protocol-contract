@@ -26,7 +26,6 @@ makeSuite('ValidationLogic: Edge cases', (testEnv: TestEnv) => {
     HEALTH_FACTOR_NOT_BELOW_THRESHOLD,
     INVALID_INTEREST_RATE_MODE_SELECTED,
     UNDERLYING_BALANCE_ZERO,
-    INCONSISTENT_FLASHLOAN_PARAMS,
     HEALTH_FACTOR_LOWER_THAN_LIQUIDATION_THRESHOLD,
     INCONSISTENT_EMODE_CATEGORY,
   } = ProtocolErrors;
@@ -652,85 +651,6 @@ makeSuite('ValidationLogic: Edge cases', (testEnv: TestEnv) => {
     await expect(
       pool.connect(user.signer).setUserUseReserveAsCollateral(dai.address, false)
     ).to.be.revertedWith(UNDERLYING_BALANCE_ZERO);
-  });
-
-  it('validateFlashloan() with inconsistent params (revert expected)', async () => {
-    const { pool, users, dai, aDai, usdc } = testEnv;
-    const user = users[0];
-
-    await expect(
-      pool
-        .connect(user.signer)
-        .flashLoan(
-          aDai.address,
-          [dai.address, usdc.address],
-          [0],
-          [RateMode.Variable, RateMode.Variable],
-          user.address,
-          '0x00',
-          0
-        )
-    ).to.be.revertedWith(INCONSISTENT_FLASHLOAN_PARAMS);
-  });
-
-  it('validateFlashloan() with inactive reserve (revert expected)', async () => {
-    const {
-      configurator,
-      poolAdmin,
-      pool,
-      dai,
-      aDai,
-      usdc,
-      users: [user],
-    } = testEnv;
-
-    expect(await configurator.connect(poolAdmin.signer).setReserveActive(dai.address, false));
-
-    await expect(
-      pool
-        .connect(user.signer)
-        .flashLoan(
-          aDai.address,
-          [dai.address, usdc.address],
-          [0, 0],
-          [RateMode.Variable, RateMode.Variable],
-          user.address,
-          '0x00',
-          0
-        )
-    ).to.be.revertedWith(RESERVE_INACTIVE);
-  });
-
-  it('validateFlashLoanSimple() with paused reserve (revert expected)', async () => {
-    const {
-      configurator,
-      poolAdmin,
-      pool,
-      weth,
-      users: [user],
-    } = testEnv;
-
-    expect(await configurator.connect(poolAdmin.signer).setReservePause(weth.address, true));
-
-    await expect(
-      pool.connect(user.signer).flashLoanSimple(user.address, weth.address, 0, '0x10', 0)
-    ).to.be.revertedWith(RESERVE_PAUSED);
-  });
-
-  it('validateFlashLoanSimple() with inactive reserve (revert expected)', async () => {
-    const {
-      configurator,
-      poolAdmin,
-      pool,
-      weth,
-      users: [user],
-    } = testEnv;
-
-    expect(await configurator.connect(poolAdmin.signer).setReserveActive(weth.address, false));
-
-    await expect(
-      pool.connect(user.signer).flashLoanSimple(user.address, weth.address, 0, '0x10', 0)
-    ).to.be.revertedWith(RESERVE_INACTIVE);
   });
 
   it('validateSetUserEMode() to undefined emode category (revert expected)', async () => {

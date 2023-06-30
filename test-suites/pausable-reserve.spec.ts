@@ -3,20 +3,13 @@ import { utils } from 'ethers';
 import { ProtocolErrors, RateMode } from '../helpers/types';
 import { MAX_UINT_AMOUNT } from '../helpers/constants';
 import { convertToCurrencyDecimals } from '../helpers/contracts-helpers';
-import { MockFlashLoanReceiver } from '../types/MockFlashLoanReceiver';
-import { getMockFlashLoanReceiver } from '@aave/deploy-v3/dist/helpers/contract-getters';
 import { makeSuite, TestEnv } from './helpers/make-suite';
 import './helpers/utils/wadraymath';
 
 makeSuite('PausableReserve', (testEnv: TestEnv) => {
-  let _mockFlashLoanReceiver = {} as MockFlashLoanReceiver;
 
   const { RESERVE_PAUSED, INVALID_FROM_BALANCE_AFTER_TRANSFER, INVALID_TO_BALANCE_AFTER_TRANSFER } =
     ProtocolErrors;
-
-  before(async () => {
-    _mockFlashLoanReceiver = await getMockFlashLoanReceiver();
-  });
 
   it('User 0 deposits 1000 DAI. Configurator pauses pool. Transfers to user 1 reverts. Configurator unpauses the network and next transfer succeeds', async () => {
     const { users, pool, dai, aDai, configurator } = testEnv;
@@ -150,35 +143,6 @@ makeSuite('PausableReserve', (testEnv: TestEnv) => {
     await configurator.connect(users[1].signer).setReservePause(dai.address, false);
   });
 
-  it('Flash loan', async () => {
-    const { dai, pool, weth, users, configurator } = testEnv;
-
-    const caller = users[3];
-
-    const flashAmount = utils.parseEther('0.8');
-
-    await _mockFlashLoanReceiver.setFailExecutionTransfer(true);
-
-    // Pause pool
-    await configurator.connect(users[1].signer).setReservePause(weth.address, true);
-
-    await expect(
-      pool
-        .connect(caller.signer)
-        .flashLoan(
-          _mockFlashLoanReceiver.address,
-          [weth.address],
-          [flashAmount],
-          [1],
-          caller.address,
-          '0x10',
-          '0'
-        )
-    ).to.be.revertedWith(RESERVE_PAUSED);
-
-    // Unpause pool
-    await configurator.connect(users[1].signer).setReservePause(weth.address, false);
-  });
 
   it('Liquidation call', async () => {
     const { users, pool, usdc, oracle, weth, configurator, helpersContract } = testEnv;
