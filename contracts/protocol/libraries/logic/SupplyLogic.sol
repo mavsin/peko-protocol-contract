@@ -75,12 +75,11 @@ library SupplyLogic {
 
     if (isFirstSupply) {
       if (
-        ValidationLogic.validateAutomaticUseAsCollateral(
+        ValidationLogic.validateUseAsCollateral(
           reservesData,
           reservesList,
           userConfig,
-          reserveCache.reserveConfiguration,
-          reserveCache.aTokenAddress
+          reserveCache.reserveConfiguration
         )
       ) {
         userConfig.setUsingAsCollateral(reserve.id, true);
@@ -213,12 +212,11 @@ library SupplyLogic {
       if (params.balanceToBefore == 0) {
         DataTypes.UserConfigurationMap storage toConfig = usersConfig[params.to];
         if (
-          ValidationLogic.validateAutomaticUseAsCollateral(
+          ValidationLogic.validateUseAsCollateral(
             reservesData,
             reservesList,
             toConfig,
-            reserve.configuration,
-            reserve.aTokenAddress
+            reserve.configuration
           )
         ) {
           toConfig.setUsingAsCollateral(reserveId, true);
@@ -272,7 +270,7 @@ library SupplyLogic {
           userConfig,
           reserveCache.reserveConfiguration
         ),
-        Errors.USER_IN_ISOLATION_MODE_OR_LTV_ZERO
+        Errors.USER_IN_ISOLATION_MODE
       );
 
       userConfig.setUsingAsCollateral(reserve.id, true);

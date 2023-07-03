@@ -70,10 +70,7 @@ library BridgeLogic {
 
     uint256 unbacked = reserve.unbacked += amount.toUint128();
 
-    require(
-      unbacked <= unbackedMintCap * (10 ** reserveDecimals),
-      Errors.UNBACKED_MINT_CAP_EXCEEDED
-    );
+    require(unbacked <= unbackedMintCap * (10**reserveDecimals), Errors.UNBACKED_MINT_CAP_EXCEEDED);
 
     reserve.updateInterestRates(reserveCache, asset, 0, 0);
 
@@ -86,12 +83,11 @@ library BridgeLogic {
 
     if (isFirstSupply) {
       if (
-        ValidationLogic.validateAutomaticUseAsCollateral(
+        ValidationLogic.validateUseAsCollateral(
           reservesData,
           reservesList,
           userConfig,
-          reserveCache.reserveConfiguration,
-          reserveCache.aTokenAddress
+          reserveCache.reserveConfiguration
         )
       ) {
         userConfig.setUsingAsCollateral(reserve.id, true);

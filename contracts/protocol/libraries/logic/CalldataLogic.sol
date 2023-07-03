@@ -15,10 +15,15 @@ library CalldataLogic {
    * @return The amount to supply
    * @return The referralCode
    */
-  function decodeSupplyParams(
-    mapping(uint256 => address) storage reservesList,
-    bytes32 args
-  ) internal view returns (address, uint256, uint16) {
+  function decodeSupplyParams(mapping(uint256 => address) storage reservesList, bytes32 args)
+    internal
+    view
+    returns (
+      address,
+      uint256,
+      uint16
+    )
+  {
     uint16 assetId;
     uint256 amount;
     uint16 referralCode;
@@ -44,7 +49,17 @@ library CalldataLogic {
   function decodeSupplyWithPermitParams(
     mapping(uint256 => address) storage reservesList,
     bytes32 args
-  ) internal view returns (address, uint256, uint16, uint256, uint8) {
+  )
+    internal
+    view
+    returns (
+      address,
+      uint256,
+      uint16,
+      uint256,
+      uint8
+    )
+  {
     uint256 deadline;
     uint8 permitV;
 
@@ -64,10 +79,11 @@ library CalldataLogic {
    * @return The address of the underlying reserve
    * @return The amount to withdraw
    */
-  function decodeWithdrawParams(
-    mapping(uint256 => address) storage reservesList,
-    bytes32 args
-  ) internal view returns (address, uint256) {
+  function decodeWithdrawParams(mapping(uint256 => address) storage reservesList, bytes32 args)
+    internal
+    view
+    returns (address, uint256)
+  {
     uint16 assetId;
     uint256 amount;
     assembly {
@@ -89,10 +105,16 @@ library CalldataLogic {
    * @return The interestRateMode, 1 for stable or 2 for variable debt
    * @return The referralCode
    */
-  function decodeBorrowParams(
-    mapping(uint256 => address) storage reservesList,
-    bytes32 args
-  ) internal view returns (address, uint256, uint256, uint16) {
+  function decodeBorrowParams(mapping(uint256 => address) storage reservesList, bytes32 args)
+    internal
+    view
+    returns (
+      address,
+      uint256,
+      uint256,
+      uint16
+    )
+  {
     uint16 assetId;
     uint256 amount;
     uint256 interestRateMode;
@@ -116,10 +138,15 @@ library CalldataLogic {
    * @return The amount to repay
    * @return The interestRateMode, 1 for stable or 2 for variable debt
    */
-  function decodeRepayParams(
-    mapping(uint256 => address) storage reservesList,
-    bytes32 args
-  ) internal view returns (address, uint256, uint256) {
+  function decodeRepayParams(mapping(uint256 => address) storage reservesList, bytes32 args)
+    internal
+    view
+    returns (
+      address,
+      uint256,
+      uint256
+    )
+  {
     uint16 assetId;
     uint256 amount;
     uint256 interestRateMode;
@@ -150,7 +177,17 @@ library CalldataLogic {
   function decodeRepayWithPermitParams(
     mapping(uint256 => address) storage reservesList,
     bytes32 args
-  ) internal view returns (address, uint256, uint256, uint256, uint8) {
+  )
+    internal
+    view
+    returns (
+      address,
+      uint256,
+      uint256,
+      uint256,
+      uint8
+    )
+  {
     uint256 deadline;
     uint8 permitV;
 
@@ -244,7 +281,17 @@ library CalldataLogic {
     mapping(uint256 => address) storage reservesList,
     bytes32 args1,
     bytes32 args2
-  ) internal view returns (address, address, address, uint256, bool) {
+  )
+    internal
+    view
+    returns (
+      address,
+      address,
+      address,
+      uint256,
+      bool
+    )
+  {
     uint16 collateralAssetId;
     uint16 debtAssetId;
     address user;

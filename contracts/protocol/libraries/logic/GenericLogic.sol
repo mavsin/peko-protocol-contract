@@ -66,7 +66,18 @@ library GenericLogic {
     mapping(uint256 => address) storage reservesList,
     mapping(uint8 => DataTypes.EModeCategory) storage eModeCategories,
     DataTypes.CalculateUserAccountDataParams memory params
-  ) internal view returns (uint256, uint256, uint256, uint256, uint256, bool) {
+  )
+    internal
+    view
+    returns (
+      uint256,
+      uint256,
+      uint256,
+      uint256,
+      uint256,
+      bool
+    )
+  {
     if (params.userConfig.isEmpty()) {
       return (0, 0, 0, 0, type(uint256).max, false);
     }
@@ -110,7 +121,7 @@ library GenericLogic {
       ) = currentReserve.configuration.getParams();
 
       unchecked {
-        vars.assetUnit = 10 ** vars.decimals;
+        vars.assetUnit = 10**vars.decimals;
       }
 
       vars.assetPrice = vars.eModeAssetPrice != 0 &&

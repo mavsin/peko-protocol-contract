@@ -29,7 +29,11 @@ interface IL2Pool {
    * @param r The R parameter of ERC712 permit sig
    * @param s The S parameter of ERC712 permit sig
    */
-  function supplyWithPermit(bytes32 args, bytes32 r, bytes32 s) external;
+  function supplyWithPermit(
+    bytes32 args,
+    bytes32 r,
+    bytes32 s
+  ) external;
 
   /**
    * @notice Calldata efficient wrapper of the withdraw function, withdrawing to the caller
@@ -39,9 +43,8 @@ interface IL2Pool {
    * @dev the shortenedAmount is cast to 256 bits at decode time, if type(uint128).max the value will be expanded to
    * type(uint256).max
    * @dev assetId is the index of the asset in the reservesList.
-   * @return The final amount withdrawn
    */
-  function withdraw(bytes32 args) external returns (uint256);
+  function withdraw(bytes32 args) external;
 
   /**
    * @notice Calldata efficient wrapper of the borrow function, borrowing on behalf of the caller
@@ -78,7 +81,11 @@ interface IL2Pool {
    * @param s The S parameter of ERC712 permit sig
    * @return The final amount repaid
    */
-  function repayWithPermit(bytes32 args, bytes32 r, bytes32 s) external returns (uint256);
+  function repayWithPermit(
+    bytes32 args,
+    bytes32 r,
+    bytes32 s
+  ) external returns (uint256);
 
   /**
    * @notice Calldata efficient wrapper of the repayWithATokens function

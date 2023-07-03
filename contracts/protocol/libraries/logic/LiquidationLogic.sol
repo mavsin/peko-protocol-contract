@@ -300,12 +300,11 @@ library LiquidationLogic {
     if (liquidatorPreviousATokenBalance == 0) {
       DataTypes.UserConfigurationMap storage liquidatorConfig = usersConfig[msg.sender];
       if (
-        ValidationLogic.validateAutomaticUseAsCollateral(
+        ValidationLogic.validateUseAsCollateral(
           reservesData,
           reservesList,
           liquidatorConfig,
-          collateralReserve.configuration,
-          collateralReserve.aTokenAddress
+          collateralReserve.configuration
         )
       ) {
         liquidatorConfig.setUsingAsCollateral(collateralReserve.id, true);
@@ -364,7 +363,15 @@ library LiquidationLogic {
     DataTypes.ReserveCache memory debtReserveCache,
     DataTypes.ExecuteLiquidationCallParams memory params,
     uint256 healthFactor
-  ) internal view returns (uint256, uint256, uint256) {
+  )
+    internal
+    view
+    returns (
+      uint256,
+      uint256,
+      uint256
+    )
+  {
     (uint256 userStableDebt, uint256 userVariableDebt) = Helpers.getUserCurrentDebt(
       params.user,
       debtReserveCache
@@ -399,7 +406,16 @@ library LiquidationLogic {
     mapping(uint8 => DataTypes.EModeCategory) storage eModeCategories,
     DataTypes.ReserveData storage collateralReserve,
     DataTypes.ExecuteLiquidationCallParams memory params
-  ) internal view returns (IAToken, address, address, uint256) {
+  )
+    internal
+    view
+    returns (
+      IAToken,
+      address,
+      address,
+      uint256
+    )
+  {
     IAToken collateralAToken = IAToken(collateralReserve.aTokenAddress);
     uint256 liquidationBonus = collateralReserve.configuration.getLiquidationBonus();
 
@@ -472,7 +488,15 @@ library LiquidationLogic {
     uint256 userCollateralBalance,
     uint256 liquidationBonus,
     IPriceOracleGetter oracle
-  ) internal view returns (uint256, uint256, uint256) {
+  )
+    internal
+    view
+    returns (
+      uint256,
+      uint256,
+      uint256
+    )
+  {
     AvailableCollateralToLiquidateLocalVars memory vars;
 
     vars.collateralPrice = oracle.getAssetPrice(collateralAsset);
@@ -482,8 +506,8 @@ library LiquidationLogic {
     vars.debtAssetDecimals = debtReserveCache.reserveConfiguration.getDecimals();
 
     unchecked {
-      vars.collateralAssetUnit = 10 ** vars.collateralDecimals;
-      vars.debtAssetUnit = 10 ** vars.debtAssetDecimals;
+      vars.collateralAssetUnit = 10**vars.collateralDecimals;
+      vars.debtAssetUnit = 10**vars.debtAssetDecimals;
     }
 
     vars.liquidationProtocolFeePercentage = collateralReserve

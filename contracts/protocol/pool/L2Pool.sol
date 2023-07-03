@@ -32,7 +32,11 @@ contract L2Pool is Pool, IL2Pool {
   }
 
   /// @inheritdoc IL2Pool
-  function supplyWithPermit(bytes32 args, bytes32 r, bytes32 s) external override {
+  function supplyWithPermit(
+    bytes32 args,
+    bytes32 r,
+    bytes32 s
+  ) external override {
     (address asset, uint256 amount, uint16 referralCode, uint256 deadline, uint8 v) = CalldataLogic
       .decodeSupplyWithPermitParams(_reservesList, args);
 
@@ -40,10 +44,10 @@ contract L2Pool is Pool, IL2Pool {
   }
 
   /// @inheritdoc IL2Pool
-  function withdraw(bytes32 args) external override returns (uint256) {
+  function withdraw(bytes32 args) external override {
     (address asset, uint256 amount) = CalldataLogic.decodeWithdrawParams(_reservesList, args);
 
-    return withdraw(asset, amount, msg.sender);
+    withdraw(asset, amount, msg.sender);
   }
 
   /// @inheritdoc IL2Pool
@@ -65,7 +69,11 @@ contract L2Pool is Pool, IL2Pool {
   }
 
   /// @inheritdoc IL2Pool
-  function repayWithPermit(bytes32 args, bytes32 r, bytes32 s) external override returns (uint256) {
+  function repayWithPermit(
+    bytes32 args,
+    bytes32 r,
+    bytes32 s
+  ) external override returns (uint256) {
     (
       address asset,
       uint256 amount,
