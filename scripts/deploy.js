@@ -25,8 +25,9 @@ async function main() {
   // );
 
   await hre.ethers.getSigners();
-  const contractFactory = await hre.ethers.getContractFactory("PoolAddressProvider");
-  const contract = await contractFactory.deploy('PEKO_POOL_ADDRESSES_PROVIDER', '0x32912fcf6b385653d7dbf235a66FFD917f47Eb68');
+  const contractFactory = await hre.ethers.getContractFactory("BorrowLogic.sol");
+  // const contract = await contractFactory.deploy('0x32912fcf6b385653d7dbf235a66FFD917f47Eb68');
+  const contract = await contractFactory.deploy();
   await contract.deployed();
 
   console.log("Contract deployed to:", contract.address);

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./IPoolAddressesProvider.sol";
+import "./interfaces/IPoolAddressesProvider.sol";
 import "./proxies/InitializableImmutableAdminUpgradeabilityProxy.sol";
 
 /**
@@ -10,10 +10,10 @@ import "./proxies/InitializableImmutableAdminUpgradeabilityProxy.sol";
  * @author Peko
  * @notice Main registry of addresses part of or connected to the protocol, including permissioned roles
  * @dev Acts as factory of proxies and admin of those, so with right to change its implementations
- * @dev Owned by the Aave Governance
+ * @dev Owned by the Peko Governance
  */
 contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
-    // Identifier of the Aave Market
+    // Identifier of the Peko Market
     string private _marketId;
 
     // Map of registered addresses (identifier => registeredAddress)
@@ -214,7 +214,7 @@ contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
     }
 
     /**
-     * @notice Updates the identifier of the Aave market.
+     * @notice Updates the identifier of the Peko market.
      * @param newMarketId The new id of the market
      */
     function _setMarketId(string memory newMarketId) internal {
