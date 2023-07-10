@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
 import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
 
 /**
  * @title IPriceOracleSentinel
- * @author Peko
+ * @author Aave
  * @notice Defines the basic interface for the PriceOracleSentinel
  */
 interface IPriceOracleSentinel {

@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
-import "../types/DataTypes.sol";
+import {DataTypes} from '../protocol/libraries/types/DataTypes.sol';
 
 /**
  * @title IReserveInterestRateStrategy
- * @author Peko
+ * @author Aave
  * @notice Interface for the calculation of the interest rates
  */
 interface IReserveInterestRateStrategy {

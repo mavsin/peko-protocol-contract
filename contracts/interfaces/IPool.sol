@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
-import "./IPoolAddressesProvider.sol";
-import "../types/DataTypes.sol";
+import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
+import {DataTypes} from '../protocol/libraries/types/DataTypes.sol';
 
 /**
  * @title IPool
- * @author Peko
- * @notice Defines the basic interface for an Peko Lending Pool.
+ * @author Aave
+ * @notice Defines the basic interface for an Aave Pool.
  */
 interface IPool {
   /**
@@ -61,10 +61,9 @@ interface IPool {
   event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount);
 
   /**
-   * @dev Emitted on borrow() and flashLoan() when debt needs to be opened
+   * @dev Emitted on borrow() when debt needs to be opened
    * @param reserve The address of the underlying asset being borrowed
-   * @param user The address of the user initiating the borrow(), receiving the funds on borrow() or just
-   * initiator of the transaction on flashLoan()
+   * @param user The address of the user initiating the borrow(), receiving the funds on borrow()
    * @param onBehalfOf The address that will be getting the debt
    * @param amount The amount borrowed out
    * @param interestRateMode The rate mode: 1 for Stable, 2 for Variable

@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from '../dependencies/openzeppelin/contracts/IERC20.sol';
 
 /**
  * @title IERC20WithPermit
- * @author Peko
+ * @author Aave
  * @notice Interface for the permit function (EIP-2612)
  */
 interface IERC20WithPermit is IERC20 {

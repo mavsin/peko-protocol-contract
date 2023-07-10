@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
 /**
  * @title IScaledBalanceToken
- * @author Peko
+ * @author Aave
  * @notice Defines the basic interface for a scaled-balance token.
  */
 interface IScaledBalanceToken {

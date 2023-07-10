@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./IScaledBalanceToken.sol";
-import "./IInitializableAToken.sol";
+import {IERC20} from '../dependencies/openzeppelin/contracts/IERC20.sol';
+import {IScaledBalanceToken} from './IScaledBalanceToken.sol';
+import {IInitializableAToken} from './IInitializableAToken.sol';
 
 /**
  * @title IAToken
- * @author Peko
+ * @author Aave
  * @notice Defines the basic interface for an AToken.
  */
 interface IAToken is IERC20, IScaledBalanceToken, IInitializableAToken {
@@ -109,8 +109,8 @@ interface IAToken is IERC20, IScaledBalanceToken, IInitializableAToken {
   function UNDERLYING_ASSET_ADDRESS() external view returns (address);
 
   /**
-   * @notice Returns the address of the Peko treasury, receiving the fees on this aToken.
-   * @return Address of the Peko treasury
+   * @notice Returns the address of the Aave treasury, receiving the fees on this aToken.
+   * @return Address of the Aave treasury
    */
   function RESERVE_TREASURY_ADDRESS() external view returns (address);
 

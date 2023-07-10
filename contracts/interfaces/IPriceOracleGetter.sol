@@ -1,10 +1,10 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
 /**
  * @title IPriceOracleGetter
- * @author Peko
- * @notice Interface for the Peko price oracle.
+ * @author Aave
+ * @notice Interface for the Aave price oracle.
  */
 interface IPriceOracleGetter {
   /**

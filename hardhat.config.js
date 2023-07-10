@@ -1,27 +1,29 @@
-require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
 
-const { API_KEY, WALLET_PRIVATE_KEY, RPC_URL } = process.env;
-
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
-
-  for (const account of accounts) {
-    console.log(account.address);
-  }
-});
+const { API_KEY, MAINNET_RPC_URL, RPC_URL, WALLET_PRIVATE_KEY } = process.env;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: '0.8.19',
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 100000,
+    compilers: [
+      {
+        version: "0.8.10",
+        settings: {
+          optimizer: { enabled: true, runs: 100_000 },
+          evmVersion: "berlin"
+        }
       },
-      evmVersion: 'london',
-    },
+    ]
+  },
+  external: {
+    contracts: [
+      {
+        artifacts: 'node_modules/@aave/deploy-v3/artifacts',
+        deploy: 'node_modules/@aave/deploy-v3/dist/deploy',
+      },
+    ],
   },
   defaultNetwork: 'lineaGoerli',
   networks: {
@@ -32,5 +34,5 @@ module.exports = {
   },
   etherscan: {
     apiKey: API_KEY,
-  },
+  }
 };

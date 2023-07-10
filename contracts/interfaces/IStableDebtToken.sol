@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.0;
 
-import "./IInitializableDebtToken.sol";
+import {IInitializableDebtToken} from './IInitializableDebtToken.sol';
 
 /**
  * @title IStableDebtToken
- * @author Peko
+ * @author Aave
  * @notice Defines the interface for the stable debt token
  * @dev It does not inherit from IERC20 to save in code size
  */
