@@ -23,14 +23,14 @@
   },
   "homepage": "https://github.com/mr-new-0509/peko-protocol-contract#readme",
   "dependencies": {
-    "@nomiclabs/hardhat-etherscan": "^3.1.7",
-    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "dotenv": "^16.3.1",
-    "hardhat": "^2.14.0"
+    "hardhat": "^2.16.1"
   },
   "devDependencies": {
     "@aave/core-v3": "^1.19.0",
     "@aave/deploy-v3": "^1.55.3",
-    "@aave/periphery-v3": "^2.4.1"
+    "@aave/periphery-v3": "^2.4.1",
+    "@nomicfoundation/hardhat-verify": "^1.0.3"
   }
 }

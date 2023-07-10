@@ -1,5 +1,5 @@
-require("@nomiclabs/hardhat-waffle");
-require("@nomiclabs/hardhat-etherscan");
+// require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-verify");
 require("dotenv").config();
 
 const { API_KEY, MAINNET_RPC_URL, RPC_URL, WALLET_PRIVATE_KEY } = process.env;
@@ -25,14 +25,26 @@ module.exports = {
       },
     ],
   },
-  defaultNetwork: 'lineaGoerli',
+  defaultNetwork: 'linea',
   networks: {
-    lineaGoerli: {
+    linea: {
       url: RPC_URL,
       accounts: [WALLET_PRIVATE_KEY]
     }
   },
   etherscan: {
-    apiKey: API_KEY,
+    apiKey: {
+      linea: API_KEY
+    },
+    customChains: [
+      {
+        network: "linea",
+        chainId: 59140,
+        urls: {
+          apiURL: "https://explorer.goerli.linea.build/api",
+          browserURL: "https://goerli.lineascan.build/"
+        }
+      }
+    ]
   }
 };
