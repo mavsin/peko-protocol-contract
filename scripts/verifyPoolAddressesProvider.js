@@ -8,9 +8,10 @@ const hre = require("hardhat");
 
 async function main() {
   await hre.run("verify:verify", {
-    address: "0x1ed6f02196606D341731AD68e92Aee342bd60863",
+    address: "0x833FdD1c0A7A7d03c913C90E110D63b7c54b8a73",
     constructorArguments: [
-      "0x833FdD1c0A7A7d03c913C90E110D63b7c54b8a73"
+      "PEKO_POOL",
+      "0x32912fcf6b385653d7dbf235a66FFD917f47Eb68"
     ],
   });
 }
