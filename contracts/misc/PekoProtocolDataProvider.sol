@@ -13,11 +13,11 @@ import {IPool} from '../interfaces/IPool.sol';
 import {IPoolDataProvider} from '../interfaces/IPoolDataProvider.sol';
 
 /**
- * @title AaveProtocolDataProvider
- * @author Aave
+ * @title PekoProtocolDataProvider
+ * @author Peko
  * @notice Peripheral contract to collect and pre-process information from the Pool.
  */
-contract AaveProtocolDataProvider is IPoolDataProvider {
+contract PekoProtocolDataProvider is IPoolDataProvider {
   using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
   using UserConfiguration for DataTypes.UserConfigurationMap;
   using WadRayMath for uint256;

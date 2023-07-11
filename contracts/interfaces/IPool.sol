@@ -6,8 +6,8 @@ import {DataTypes} from '../protocol/libraries/types/DataTypes.sol';
 
 /**
  * @title IPool
- * @author Aave
- * @notice Defines the basic interface for an Aave Pool.
+ * @author Peko
+ * @notice Defines the basic interface for an Peko Pool.
  */
 interface IPool {
   /**

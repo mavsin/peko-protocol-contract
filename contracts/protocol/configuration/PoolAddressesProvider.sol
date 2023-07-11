@@ -3,17 +3,17 @@ pragma solidity 0.8.10;
 
 import {Ownable} from '../../dependencies/openzeppelin/contracts/Ownable.sol';
 import {IPoolAddressesProvider} from '../../interfaces/IPoolAddressesProvider.sol';
-import {InitializableImmutableAdminUpgradeabilityProxy} from '../libraries/aave-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
+import {InitializableImmutableAdminUpgradeabilityProxy} from '../libraries/peko-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol';
 
 /**
  * @title PoolAddressesProvider
- * @author Aave
+ * @author Peko
  * @notice Main registry of addresses part of or connected to the protocol, including permissioned roles
  * @dev Acts as factory of proxies and admin of those, so with right to change its implementations
- * @dev Owned by the Aave Governance
+ * @dev Owned by the Peko Governance
  */
 contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
-  // Identifier of the Aave Market
+  // Identifier of the Peko Market
   string private _marketId;
 
   // Map of registered addresses (identifier => registeredAddress)
@@ -181,7 +181,7 @@ contract PoolAddressesProvider is Ownable, IPoolAddressesProvider {
   }
 
   /**
-   * @notice Updates the identifier of the Aave market.
+   * @notice Updates the identifier of the Peko market.
    * @param newMarketId The new id of the market
    */
   function _setMarketId(string memory newMarketId) internal {

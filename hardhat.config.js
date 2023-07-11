@@ -2,7 +2,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require("@nomicfoundation/hardhat-verify");
 require("dotenv").config();
 
-const { API_KEY, MAINNET_RPC_URL, RPC_URL, WALLET_PRIVATE_KEY } = process.env;
+const { API_KEY, RPC_URL, TESTNET_RPC_URL, WALLET_PRIVATE_KEY } = process.env;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -30,7 +30,11 @@ module.exports = {
     linea: {
       url: RPC_URL,
       accounts: [WALLET_PRIVATE_KEY]
-    }
+    },
+    goerli: {
+      url: TESTNET_RPC_URL,
+      accounts: [WALLET_PRIVATE_KEY],
+    },
   },
   etherscan: {
     apiKey: {

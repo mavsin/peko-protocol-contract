@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 /**
  * @title Errors library
- * @author Aave
- * @notice Defines the error messages emitted by the different contracts of the Aave protocol
+ * @author Peko
+ * @notice Defines the error messages emitted by the different contracts of the Peko protocol
  */
 library Errors {
   string public constant CALLER_NOT_POOL_ADMIN = '1'; // 'The caller of the function is not a pool admin'

@@ -5,7 +5,7 @@ import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
 
 /**
  * @title IPoolDataProvider
- * @author Aave
+ * @author Peko
  * @notice Defines the basic interface of a PoolDataProvider
  */
 interface IPoolDataProvider {

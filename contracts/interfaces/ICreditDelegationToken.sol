@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 /**
  * @title ICreditDelegationToken
- * @author Aave
+ * @author Peko
  * @notice Defines the basic interface for a token supporting credit delegation.
  */
 interface ICreditDelegationToken {

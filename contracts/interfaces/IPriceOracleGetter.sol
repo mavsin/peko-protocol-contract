@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 /**
  * @title IPriceOracleGetter
- * @author Aave
- * @notice Interface for the Aave price oracle.
+ * @author Peko
+ * @notice Interface for the Peko price oracle.
  */
 interface IPriceOracleGetter {
   /**

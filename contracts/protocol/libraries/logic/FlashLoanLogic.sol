@@ -20,7 +20,7 @@ import {ReserveLogic} from './ReserveLogic.sol';
 
 /**
  * @title FlashLoanLogic library
- * @author Aave
+ * @author Peko
  * @notice Implements the logic for the flash loans
  */
 library FlashLoanLogic {

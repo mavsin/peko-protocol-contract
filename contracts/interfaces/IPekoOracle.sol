@@ -5,11 +5,11 @@ import {IPriceOracleGetter} from './IPriceOracleGetter.sol';
 import {IPoolAddressesProvider} from './IPoolAddressesProvider.sol';
 
 /**
- * @title IAaveOracle
- * @author Aave
- * @notice Defines the basic interface for the Aave Oracle
+ * @title IPekoOracle
+ * @author Peko
+ * @notice Defines the basic interface for the Peko Oracle
  */
-interface IAaveOracle is IPriceOracleGetter {
+interface IPekoOracle is IPriceOracleGetter {
   /**
    * @dev Emitted after the base currency is set
    * @param baseCurrency The base currency of used for price quotes

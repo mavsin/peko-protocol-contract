@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 /**
  * @title IPriceOracle
- * @author Aave
+ * @author Peko
  * @notice Defines the basic interface for a Price oracle.
  */
 interface IPriceOracle {

@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 /**
  * @title ISequencerOracle
- * @author Aave
+ * @author Peko
  * @notice Defines the basic interface for a Sequencer oracle.
  */
 interface ISequencerOracle {

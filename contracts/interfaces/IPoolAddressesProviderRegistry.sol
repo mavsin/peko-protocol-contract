@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 /**
  * @title IPoolAddressesProviderRegistry
- * @author Aave
- * @notice Defines the basic interface for an Aave Pool Addresses Provider Registry.
+ * @author Peko
+ * @notice Defines the basic interface for an Peko Pool Addresses Provider Registry.
  */
 interface IPoolAddressesProviderRegistry {
   /**

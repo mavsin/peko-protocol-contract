@@ -8,7 +8,7 @@ import {IPoolAddressesProvider} from '../interfaces/IPoolAddressesProvider.sol';
 
 /**
  * @title ZeroReserveInterestRateStrategy contract
- * @author Aave
+ * @author Peko
  * @notice Interest Rate Strategy contract, with all parameters zeroed.
  * @dev It returns zero liquidity and borrow rate.
  */

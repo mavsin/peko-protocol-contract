@@ -25,7 +25,7 @@ import {IncentivizedERC20} from '../../tokenization/base/IncentivizedERC20.sol';
 
 /**
  * @title ReserveLogic library
- * @author Aave
+ * @author Peko
  * @notice Implements functions to validate the different actions of the protocol
  */
 library ValidationLogic {

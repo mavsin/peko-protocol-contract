@@ -3,7 +3,7 @@ pragma solidity 0.8.10;
 
 /**
  * @title VersionedInitializable
- * @author Aave, inspired by the OpenZeppelin Initializable contract
+ * @author Peko, inspired by the OpenZeppelin Initializable contract
  * @notice Helper contract to implement initializer functions. To use it, replace
  * the constructor with a function that has the `initializer` modifier.
  * @dev WARNING: Unlike constructors, initializer functions must be manually

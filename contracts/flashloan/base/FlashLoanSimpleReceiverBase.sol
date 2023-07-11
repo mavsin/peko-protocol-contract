@@ -7,7 +7,7 @@ import {IPool} from '../../interfaces/IPool.sol';
 
 /**
  * @title FlashLoanSimpleReceiverBase
- * @author Aave
+ * @author Peko
  * @notice Base contract to develop a flashloan-receiver contract.
  */
 abstract contract FlashLoanSimpleReceiverBase is IFlashLoanSimpleReceiver {

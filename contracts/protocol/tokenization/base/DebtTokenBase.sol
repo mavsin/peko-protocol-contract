@@ -3,13 +3,13 @@ pragma solidity 0.8.10;
 
 import {Context} from '../../../dependencies/openzeppelin/contracts/Context.sol';
 import {Errors} from '../../libraries/helpers/Errors.sol';
-import {VersionedInitializable} from '../../libraries/aave-upgradeability/VersionedInitializable.sol';
+import {VersionedInitializable} from '../../libraries/peko-upgradeability/VersionedInitializable.sol';
 import {ICreditDelegationToken} from '../../../interfaces/ICreditDelegationToken.sol';
 import {EIP712Base} from './EIP712Base.sol';
 
 /**
  * @title DebtTokenBase
- * @author Aave
+ * @author Peko
  * @notice Base contract for different types of debt tokens, like StableDebtToken or VariableDebtToken
  */
 abstract contract DebtTokenBase is

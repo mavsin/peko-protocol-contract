@@ -14,7 +14,7 @@ import {EModeLogic} from './EModeLogic.sol';
 
 /**
  * @title GenericLogic library
- * @author Aave
+ * @author Peko
  * @notice Implements protocol-level logic to calculate and validate the state of a user
  */
 library GenericLogic {

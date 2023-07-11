@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.10;
 
-import {IAaveIncentivesController} from '../../../interfaces/IAaveIncentivesController.sol';
+import {IPekoIncentivesController} from '../../../interfaces/IPekoIncentivesController.sol';
 import {IPool} from '../../../interfaces/IPool.sol';
 import {IncentivizedERC20} from './IncentivizedERC20.sol';
 
 /**
  * @title MintableIncentivizedERC20
- * @author Aave
+ * @author Peko
  * @notice Implements mint and burn functions for IncentivizedERC20
  */
 abstract contract MintableIncentivizedERC20 is IncentivizedERC20 {
@@ -39,7 +39,7 @@ abstract contract MintableIncentivizedERC20 is IncentivizedERC20 {
     uint128 oldAccountBalance = _userState[account].balance;
     _userState[account].balance = oldAccountBalance + amount;
 
-    IAaveIncentivesController incentivesControllerLocal = _incentivesController;
+    IPekoIncentivesController incentivesControllerLocal = _incentivesController;
     if (address(incentivesControllerLocal) != address(0)) {
       incentivesControllerLocal.handleAction(account, oldTotalSupply, oldAccountBalance);
     }
@@ -57,7 +57,7 @@ abstract contract MintableIncentivizedERC20 is IncentivizedERC20 {
     uint128 oldAccountBalance = _userState[account].balance;
     _userState[account].balance = oldAccountBalance - amount;
 
-    IAaveIncentivesController incentivesControllerLocal = _incentivesController;
+    IPekoIncentivesController incentivesControllerLocal = _incentivesController;
 
     if (address(incentivesControllerLocal) != address(0)) {
       incentivesControllerLocal.handleAction(account, oldTotalSupply, oldAccountBalance);

@@ -6,7 +6,7 @@ import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
 
 /**
  * @title ReservesSetupHelper
- * @author Aave
+ * @author Peko
  * @notice Deployment helper to setup the assets risk parameters at PoolConfigurator in batch.
  * @dev The ReservesSetupHelper is an Ownable contract, so only the deployer or future owners can call this contract.
  */
