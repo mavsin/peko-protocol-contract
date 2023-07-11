@@ -1,4 +1,4 @@
-// require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-toolbox");
 require("@nomicfoundation/hardhat-verify");
 require("dotenv").config();
 
@@ -41,8 +41,8 @@ module.exports = {
         network: "linea",
         chainId: 59140,
         urls: {
-          apiURL: "https://explorer.goerli.linea.build/api",
-          browserURL: "https://goerli.lineascan.build/"
+          apiURL: "https://api-goerli.lineascan.build/api",
+          browserURL: ""
         }
       }
     ]

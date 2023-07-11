@@ -31,7 +31,24 @@ async function main() {
 
   // const lockedAmount = hre.ethers.parseEther("0.001");
 
-  const contractFactory = await hre.ethers.getContractFactory("Pool", {
+  // const contractFactory = await hre.ethers.getContractFactory("Pool", {
+  //   libraries: {
+  //     BorrowLogic: "0x99De5245d305b629d32acf25DA49344c2c81a8E5",
+  //     BridgeLogic: "0x4f9c58803720d94331e67B90b1145c42aA6AB825",
+  //     EModeLogic: "0x0412796a45F577E2A9da002Db44C3373660E799D",
+  //     LiquidationLogic: "0xc6b6a36d31A50159f32065606E3be78981a30C22",
+  //     PoolLogic: "0x9F2b859147B69F3eed49025e5D805Bc22a94A176",
+  //     SupplyLogic: "0xBA3442dbE0E526E1a5E316d9fd17ccD59b8e0C6B"
+  //   }
+  // });
+  // const contract = await contractFactory.deploy("0x73F238bf2f94D5a72fbB127adc33501d96C3B890");
+  // // Wait for this transaction to be mined
+  // await contract.deployed()
+
+  // // Get contract address
+  // console.log("Contract deployed to:", contract.address);
+
+  const deployment = await hre.ethers.deployContract("Pool", ["0x73F238bf2f94D5a72fbB127adc33501d96C3B890"], {
     libraries: {
       BorrowLogic: "0x99De5245d305b629d32acf25DA49344c2c81a8E5",
       BridgeLogic: "0x4f9c58803720d94331e67B90b1145c42aA6AB825",
@@ -41,22 +58,12 @@ async function main() {
       SupplyLogic: "0xBA3442dbE0E526E1a5E316d9fd17ccD59b8e0C6B"
     }
   });
-  const contract = await contractFactory.deploy("0x73F238bf2f94D5a72fbB127adc33501d96C3B890");
-  // Wait for this transaction to be mined
-  await contract.deployed()
 
-  // Get contract address
-  console.log("Contract deployed to:", contract.address);
+  await deployment.waitForDeployment();
 
-  // const lock = await hre.ethers.deployContract("Pool", ["0x73F238bf2f94D5a72fbB127adc33501d96C3B890"]);
-
-  // await lock.waitForDeployment();
-
-  // console.log(
-  //   `Lock with ${ethers.formatEther(
-  //     lockedAmount
-  //   )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  // );
+  console.log(
+    `Contract has been deployed to ${deployment.target}`
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

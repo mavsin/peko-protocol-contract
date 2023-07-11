@@ -10,4 +10,8 @@ npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
+
+npx hardhat verify --network linea --constructor-args args.js --libraries libraries.js 0xc3e747214C511E67eEA9934128cDb8E70FcDE4EA
 ```
+
+npx hardhat verify --network linea --constructor-args args.js --libraries libraries.js 0xd28851d20e571a52ff2e8c16392e5c3ac3b5f9cb
